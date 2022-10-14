@@ -14,7 +14,14 @@ def plot_classes_histogram_genes():
     plt.xlabel("Classes")
     plt.show()
 
-
+def plot_histogram_from_image_dict(img_dict):
+    classes_len = []
+    for key in img_dict.keys():
+        classes_len.append(len(img_dict[key]))
+    plt.bar(img_dict.keys(), classes_len)
+    plt.ylabel("No. images")
+    plt.xlabel("Classes")
+    plt.show()
 
 
 

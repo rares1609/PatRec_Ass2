@@ -1,6 +1,7 @@
 import argparse
 import sys
 from Code.analysis import *
+from Code.augment import *
 
 def get_arguments():
     parser = argparse.ArgumentParser(description='Pattern Recogniton Task1')
@@ -14,15 +15,22 @@ def get_arguments():
 
     
     arguments = parser.parse_args()
-    print(arguments)
     return arguments
 
 def run(no_analysis, no_features, no_classify, no_cluster, no_search, no_evaluate):
     if not(no_analysis):
         print("add all code for running analysis")
+        classes, imgs = read_data_cats()
+        #plot_histogram_from_image_dict(imgs)
 
     if not(no_features):
         print("add all code for running feature extraction")
+        try:
+            equalize_cats_classes(imgs)
+        except UnboundLocalError:
+            classes, imgs = read_data_cats()
+            equalize_cats_classes(imgs)
+
 
     if not(no_classify):
         print("add all code for running classification")
