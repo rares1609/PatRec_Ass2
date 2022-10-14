@@ -1,2 +1,4 @@
 import sys
-import Code.analysis
+from Code.analysis import *
+
+analysis_genes()
