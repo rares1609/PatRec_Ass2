@@ -1,6 +1,7 @@
 import argparse
 import sys
 from Code.analysis import *
+from Code.features import *
 
 def get_arguments():
     parser = argparse.ArgumentParser(description='Pattern Recogniton Task1')
@@ -20,9 +21,11 @@ def get_arguments():
 def run(no_analysis, no_features, no_classify, no_cluster, no_search, no_evaluate):
     if not(no_analysis):
         print("add all code for running analysis")
+        plot_classes_histogram_genes()
 
     if not(no_features):
         print("add all code for running feature extraction")
+        plot_projection_genes()
 
     if not(no_classify):
         print("add all code for running classification")
