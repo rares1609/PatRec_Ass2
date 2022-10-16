@@ -2,6 +2,7 @@ import argparse
 import sys
 from Code.analysis import *
 from Code.features import *
+from Code.classification import *
 
 def get_arguments():
     parser = argparse.ArgumentParser(description='Pattern Recogniton Task1')
@@ -25,10 +26,11 @@ def run(no_analysis, no_features, no_classify, no_cluster, no_search, no_evaluat
 
     if not(no_features):
         print("add all code for running feature extraction")
-        plot_projection_genes()
+        plot_2D_PCA()
 
     if not(no_classify):
         print("add all code for running classification")
+        random_forest()
     
     if not(no_cluster):
         print("add all code for running clustering")
