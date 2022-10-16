@@ -1,5 +1,4 @@
 import shutil
-import random
 from Code.utils import *
 
 def equalize_cats_classes(img_dict):
@@ -9,9 +8,8 @@ def equalize_cats_classes(img_dict):
         try:
             shutil.copytree("./data/Bigcats/" + folder_name, path + folder_name)
             remove_dupicate_images(path + folder_name)
+            mirror_images(path + folder_name)
         except FileExistsError:
-            while len(listdir(path)) < 40:
-                #random.choice
-                pass
+            mirror_images(path + folder_name)
             pass
         

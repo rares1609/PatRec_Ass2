@@ -1,7 +1,9 @@
 from genericpath import isdir
 from os import listdir, mkdir, path, remove
 from pathlib import Path
+import numpy as np
 from PIL import Image
+import random
 import tqdm
 import imagehash
 import pandas as pd
@@ -57,3 +59,17 @@ def remove_dupicate_images(path):
                         except FileNotFoundError:
                             pass #file already deleted
                         break
+
+def mirror_images(path):
+    if len(listdir(path)) < 40:
+        images_to_mirror = random.sample(listdir(path), 40 - len(listdir(path)))
+        for image_name in images_to_mirror:
+            image = Image.open(path + "/" + image_name)
+            if random.randint(0, 1):
+                # Mirror image horizontally
+                mirrored_img = np.flip(image, axis=1)
+            else:
+                # Mirror image vertically
+                mirrored_img = np.flip(image, axis=0)
+            mirrored_img = Image.fromarray(mirrored_img)
+            mirrored_img.save(path + "/mirrored_" + image_name)
