@@ -57,11 +57,24 @@ def logistic_regression_genes():
 '''
 
 def random_forest():
+    data, labels = read_data_genes()
+    data2 = data.iloc[: , 1:]
     PCA_df, X_pca, Y = principal_component_analysis()
     X_Reduced, X_Test_Reduced, Y_Reduced, Y_Test_Reduced = train_test_split(X_pca, Y, 
                                                                         test_size = 0.30, 
                                                                         random_state = 101)
+#    X, Y = divide_into_features_labels_genes()
+#    X_Reduced, X_Test_Reduced, Y_Reduced, Y_Test_Reduced = train_test_split(X, Y, 
+#                                                                        test_size = 0.30, 
+#                                                                        random_state = 101)
+    print("Random Forest for PCA dataset")
+    start = time.process_time()
     trainedforest = RandomForestClassifier(n_estimators=700).fit(X_Reduced,Y_Reduced)
+
+    print(time.process_time() - start)
+    predictionforest = trainedforest.predict(X_Test_Reduced)
+    print(confusion_matrix(Y_Test_Reduced,predictionforest))
+    print(classification_report(Y_Test_Reduced,predictionforest))
 
     x_min, x_max = X_Reduced[:, 0].min() - 1, X_Reduced[:, 0].max() + 1
     y_min, y_max = X_Reduced[:, 1].min() - 1, X_Reduced[:, 1].max() + 1

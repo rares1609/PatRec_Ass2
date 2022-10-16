@@ -30,6 +30,7 @@ def run(no_analysis, no_features, no_classify, no_cluster, no_search, no_evaluat
 
     if not(no_classify):
         print("add all code for running classification")
+        forest_test()
         random_forest()
     
     if not(no_cluster):

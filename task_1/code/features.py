@@ -78,15 +78,15 @@ def divide_into_features_labels_genes():
     data2 = data.iloc[: , 1:]
     Y = LabelEncoder().fit_transform(Y)
     X = StandardScaler().fit_transform(data2)
-    print(X)
     return X, Y
 
 
-def forest_test():
+def forest_test():  # Random Forest test for raw dataset
     X, Y = divide_into_features_labels_genes()
     X_Train, X_Test, Y_Train, Y_Test = train_test_split(X, Y, 
                                                         test_size = 0.30, 
                                                         random_state = 101)
+    print("Random Forest for raw dataset")
     start = time.process_time()
     trainedforest = RandomForestClassifier(n_estimators=700).fit(X_Train,Y_Train)
     print(time.process_time() - start)
@@ -101,7 +101,7 @@ def principal_component_analysis():
     X_pca = pca.fit_transform(X)
     PCA_df = pd.DataFrame(data = X_pca, columns = ['PC1', 'PC2'])
     PCA_df = pd.concat([PCA_df, data2['Class']], axis = 1)
-    PCA_df['Class'] = LabelEncoder().fit_transform(PCA_df['Class'])
+    #PCA_df['Class'] = LabelEncoder().fit_transform(PCA_df['Class'])
     return PCA_df, X_pca, Y
 
 def plot_2D_PCA():
@@ -111,7 +111,7 @@ def plot_2D_PCA():
     classes = [0, 1, 2, 3, 4]
     targets = ['PRAD', 'LUAD', 'BRCA', 'KIRC', 'COAD']
     colors = ['r', 'g', 'b', 'y', 'm']
-    for clas, color in zip(classes, colors):
+    for clas, color in zip(targets, colors):
         plt.scatter(PCA_df.loc[PCA_df['Class'] == clas, 'PC1'], 
                     PCA_df.loc[PCA_df['Class'] == clas, 'PC2'], 
                     c = color)
