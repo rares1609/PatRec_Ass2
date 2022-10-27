@@ -13,7 +13,6 @@ def read_data():
         data.drop('Amount', inplace=True, axis=1)
     
         train, test = train_test_split(data, test_size=0.2)
-        print(train)
         train_lab, train_unlab = train_test_split(train, test_size=0.7)
         train_unlab['Class'] = -1
     

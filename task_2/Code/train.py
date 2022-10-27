@@ -14,7 +14,7 @@ def train_baseline(train, augmented=False):
         save_model(model, "baseline")
 
 def train_semi_supervised(train_lab, train_unlab):
-    model = LabelPropagation(kernel='knn', n_neighbors=5)
+    model = LabelPropagation(kernel='knn', n_neighbors=5, tol=0.01, gamma=2)
     train_mixed = concat([train_lab, train_unlab])
     model.fit(train_mixed.loc[:, ~train_mixed.columns.isin(["Unnamed: 0", 'Class'])], train_mixed["Class"])
     print("$$$$$$ Trained 'semi_supervised' model $$$$$$\n\n")
@@ -23,6 +23,5 @@ def train_semi_supervised(train_lab, train_unlab):
     new_labels=model.transduction_
     train_mixed["Class"] = new_labels
     train_mixed.to_csv('./data/train_mixed_labels.csv')
-    print(train_mixed,train_lab,train_unlab)
 
     return train_mixed
