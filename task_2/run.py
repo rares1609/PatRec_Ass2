@@ -2,14 +2,14 @@ import argparse
 import sys
 from Code.train import *
 from Code.test import *
+from Code.utils import *
 
 def get_arguments():
     parser = argparse.ArgumentParser(description='Pattern Recogniton Task1')
 
     parser.add_argument('-no-train', action=argparse.BooleanOptionalAction, help='Do not Perform Training')
     parser.add_argument('-no-test', action=argparse.BooleanOptionalAction, help='Do not Perform Testing')
-    parser.add_argument('-use-saved-model', action=argparse.BooleanOptionalAction, help='Use saved model for testing')
-
+    parser.add_argument('-model', type=str, default='all', help='For what model to run testing and training')
 
     parser.add_argument('-no-cluster', action=argparse.BooleanOptionalAction, help='Do not Perform Clustering')
     parser.add_argument('-no-search', action=argparse.BooleanOptionalAction, help='Do not Perform Grid Search')
@@ -19,15 +19,19 @@ def get_arguments():
     arguments = parser.parse_args()
     return arguments
 
-def run(no_analysis, no_features, no_classify, no_cluster, no_search, no_evaluate):
-    if not(no_analysis):
-        print("add all code for training")
-        classes, imgs = read_data_cats()
-        #plot_histogram_from_image_dict(imgs)
-        plot_classes_histogram_genes()
+def run(no_train, no_test, use_model):
+    data_train_lab, data_train_unlab, data_test = read_data()
+    if not(no_train):
+        if use_model == "all":
+            train_baseline(data_train_lab)
+            data_train_mixed = train_semi_supervised(data_train_lab, data_train_unlab)
+            train_baseline(data_train_mixed, augmented=True)
 
-    if not(no_features):
-        print("add all code for testing")
+    if not(no_test):
+        if use_model == "all":
+            test_model("baseline", data_test)
+            test_model("semi_supervised", data_test)
+            test_model("baseline_augmented", data_test)
 
 
 if __name__ == '__main__':
@@ -37,8 +41,5 @@ if __name__ == '__main__':
     run(
         arguments.no_train,
         arguments.no_test,
-        arguments.use_saved_model,
-        arguments.no_cluster,
-        arguments.no_search,
-        arguments.no_evaluate
+        arguments.model
         )

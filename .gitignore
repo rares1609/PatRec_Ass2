@@ -1,1 +1,7 @@
 /task_1/data/augmented_cats/
+/task_2/data/test.csv
+/task_2/data/train.csv
+/task_2/data/train_lab.csv
+/task_2/data/train_unlab.csv
+/task_2/data/train_mixed_labels.csv
+/task_2/models
