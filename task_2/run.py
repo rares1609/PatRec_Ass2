@@ -37,7 +37,7 @@ def run(no_train, no_test, use_model):
 if __name__ == '__main__':
 
     arguments = get_arguments()
-    # To not perform a part of the task mention it in run command line. For example: -no-analysis
+    # To not perform a part of the task mention it in run command line. For example: -no-training
     run(
         arguments.no_train,
         arguments.no_test,
