@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 
 def extract_classses_genes():
     _, labels = read_data_genes()
+    print("Label value count is:")
+    print(labels.Class.value_counts())
     classes = labels['Class'].tolist()
     return classes
 

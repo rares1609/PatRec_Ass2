@@ -3,6 +3,9 @@ import sys
 from Code.analysis import *
 from Code.features import *
 from Code.classification import *
+from Code.features import *
+from Code.classification import *
+from Code.clustering import *
 
 def get_arguments():
     parser = argparse.ArgumentParser(description='Pattern Recogniton Task1')
@@ -26,15 +29,20 @@ def run(no_analysis, no_features, no_classify, no_cluster, no_search, no_evaluat
 
     if not(no_features):
         print("add all code for running feature extraction")
-        plot_2D_PCA()
+        #plot_2D_PCA()
+        PCA_test()
+        baseline_random_forest()
+        
 
     if not(no_classify):
         print("add all code for running classification")
-        forest_test()
-        random_forest()
+        #forest_test()
+        #random_forest()
+        PCA_random_forest()
     
     if not(no_cluster):
         print("add all code for running clustering")
+        clustering()
     
     if not(no_search):
         print("add all code for running grid search")
