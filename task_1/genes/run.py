@@ -66,11 +66,15 @@ def run(no_analysis, no_features, no_classify, no_cluster, no_search, no_evaluat
     
     if not(no_cluster):
         print("add all code for running clustering")
-        #dbscan_clustering(data_balanced.iloc[: , 1:],labels_balanced['Class'])
-        KMeans_clustering(data_balanced.iloc[: , 1:],labels_balanced['Class'])
-        print(type(y_train),type(y_test))
+        print("\nKMeans clustering on original data:")
+        KMeans_clustering(data.iloc[: , 1:20532],labels['Class'])
+        
+        print("\n\nKMeans clustering on balanced data:")
+        KMeans_clustering(data_balanced.iloc[: , 1:],labels_balanced['Class'], scenario = 'balanced')
+        
+        print("\n\nKMeans clustering on reduced data:")
         try:
-            KMeans_clustering(concatenate((X_train_LDA, X_test_LDA)), concat(Series(y_train),y_test), scenario = 'reduced')
+            KMeans_clustering(concatenate((X_train_LDA, X_test_LDA)), concat([y_train,y_test]), scenario = 'reduced')
         except UnboundLocalError:
             print("Data from LDA not existant!!!!!!!!")
             print("\nRunning LDA now")
