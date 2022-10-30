@@ -1,11 +1,10 @@
 import argparse
 import sys
-from Code.analysis import *
-from Code.features import *
-from Code.classification import *
+from Code.analysis import plot_classes_histogram_genes,plot_PCA_components,select_n_components_lda
 from Code.features import *
 from Code.classification import *
 from Code.clustering import *
+from Code.augment import *
 
 def get_arguments():
     parser = argparse.ArgumentParser(description='Pattern Recogniton Task1')
@@ -23,26 +22,31 @@ def get_arguments():
     return arguments
 
 def run(no_analysis, no_features, no_classify, no_cluster, no_search, no_evaluate):
+    data, labels = read_data_genes()
+    data_balanced, labels_balanced = resample_data(data, labels)
+    X_train, X_test, y_train, y_test = data_split_genes(data_balanced, labels_balanced)
     if not(no_analysis):
         print("add all code for running analysis")
-        plot_classes_histogram_genes()
+        #plot_classes_histogram_genes(labels)
+        #plot_classes_histogram_genes(labels_balanced)
+        #plot_PCA_components(X_train)
 
     if not(no_features):
         print("add all code for running feature extraction")
-        #plot_2D_PCA()
-        PCA_test()
-        baseline_random_forest()
+        X_train_PCA, X_test_PCA = PCA_10_components(X_train, X_test)
+        print("Number of components for LDA: ", select_n_components_lda(data_balanced.iloc[: , 1:], labels_balanced['Class'], 0.95))
+        X_train_LDA, X_test_LDA = LDA_n_components(X_train, X_test, y_train, y_test, select_n_components_lda(data_balanced.iloc[: , 1:], labels_balanced['Class'], 0.95))
+ 
         
 
     if not(no_classify):
+        classification_random_forest(X_train,y_train,X_test,y_test)
+        classification_random_forest(X_train_PCA,y_train,X_test_PCA,y_test)
+        classification_random_forest(X_train_LDA,y_train,X_test_LDA,y_test)
         print("add all code for running classification")
-        #forest_test()
-        #random_forest()
-        PCA_random_forest()
     
     if not(no_cluster):
         print("add all code for running clustering")
-        clustering()
     
     if not(no_search):
         print("add all code for running grid search")
