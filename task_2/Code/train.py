@@ -4,7 +4,7 @@ from pandas import concat
 from Code.utils import save_model
 
 def train_baseline(train, augmented=False):
-    model = RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
+    model = RandomForestClassifier(max_depth=5, max_leaf_nodes=15, n_jobs=-1)
     model.fit(train.loc[:, ~train.columns.isin(["Unnamed: 0", 'Class'])], train["Class"])
     if augmented:
         print("$$$$$$ Trained 'baseline_augmented' model $$$$$$\n\n")
@@ -14,7 +14,7 @@ def train_baseline(train, augmented=False):
         save_model(model, "baseline")
 
 def train_semi_supervised(train_lab, train_unlab):
-    model = LabelPropagation(kernel='knn', n_neighbors=5, tol=0.01, gamma=2)
+    model = LabelPropagation(kernel='knn', max_iter=100, n_jobs=-1)
     train_mixed = concat([train_lab, train_unlab])
     model.fit(train_mixed.loc[:, ~train_mixed.columns.isin(["Unnamed: 0", 'Class'])], train_mixed["Class"])
     print("$$$$$$ Trained 'semi_supervised' model $$$$$$\n\n")
