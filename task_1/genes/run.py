@@ -1,5 +1,7 @@
 import argparse
 import sys
+from pandas import concat, Series
+from numpy import concatenate
 from Code.analysis import plot_classes_histogram_genes,plot_PCA_components,select_n_components_lda
 from Code.features import *
 from Code.classification import *
@@ -34,19 +36,47 @@ def run(no_analysis, no_features, no_classify, no_cluster, no_search, no_evaluat
     if not(no_features):
         print("add all code for running feature extraction")
         X_train_PCA, X_test_PCA = PCA_10_components(X_train, X_test)
-        print("Number of components for LDA: ", select_n_components_lda(data_balanced.iloc[: , 1:], labels_balanced['Class'], 0.95))
+        print("\nNumber of components for LDA: ", select_n_components_lda(data_balanced.iloc[: , 1:], labels_balanced['Class'], 0.95))
         X_train_LDA, X_test_LDA = LDA_n_components(X_train, X_test, y_train, y_test, select_n_components_lda(data_balanced.iloc[: , 1:], labels_balanced['Class'], 0.95))
- 
+        print("\n")
+
         
 
     if not(no_classify):
-        classification_random_forest(X_train,y_train,X_test,y_test)
-        classification_random_forest(X_train_PCA,y_train,X_test_PCA,y_test)
-        classification_random_forest(X_train_LDA,y_train,X_test_LDA,y_test)
         print("add all code for running classification")
+        print("\n\nRandom Forest on raw dataset:")
+        classification_random_forest(X_train,y_train,X_test,y_test)
+        print("\n\nRandom Forest on PCA:")
+        classification_random_forest(X_train_PCA,y_train,X_test_PCA,y_test)
+        print("\n\nRandom Forest on LDA:")
+        classification_random_forest(X_train_LDA,y_train,X_test_LDA,y_test)
+        print("\n\nLogistic regression on raw dataset:")
+        classification_logistic_regression(X_train,y_train,X_test,y_test)
+        print("\n\nLogistic regression on PCA:")
+        classification_logistic_regression(X_train_PCA,y_train,X_test_PCA,y_test)
+        print("\n\nLogistic regression on LDA:")
+        classification_logistic_regression(X_train_LDA,y_train,X_test_LDA,y_test)
+        print("\n\nKNN on raw dataset:")
+        classification_knn(X_train,y_train,X_test,y_test)
+        print("\n\nKNN on PCA:")
+        classification_knn(X_train_PCA,y_train,X_test_PCA,y_test)
+        print("\n\nKNN on LDA:")
+        classification_knn(X_train_LDA,y_train,X_test_LDA,y_test)
+        print("\n")
     
     if not(no_cluster):
         print("add all code for running clustering")
+        #dbscan_clustering(data_balanced.iloc[: , 1:],labels_balanced['Class'])
+        KMeans_clustering(data_balanced.iloc[: , 1:],labels_balanced['Class'])
+        print(type(y_train),type(y_test))
+        try:
+            KMeans_clustering(concatenate((X_train_LDA, X_test_LDA)), concat(Series(y_train),y_test), scenario = 'reduced')
+        except UnboundLocalError:
+            print("Data from LDA not existant!!!!!!!!")
+            print("\nRunning LDA now")
+            X_train_LDA, X_test_LDA = LDA_n_components(X_train, X_test, y_train, y_test, select_n_components_lda(data_balanced.iloc[: , 1:], labels_balanced['Class'], 0.95))
+            print("\nRunning Clustering for LDA now")
+            KMeans_clustering(concatenate((X_train_LDA, X_test_LDA)), concat([y_train,y_test]), scenario = 'reduced')
     
     if not(no_search):
         print("add all code for running grid search")
