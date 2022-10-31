@@ -1,39 +1,61 @@
 import argparse
 import sys
+from tqdm import tqdm
 from Code.train import *
 from Code.test import *
 from Code.utils import *
 
+# function that determines the function call parameters and returns them
 def get_arguments():
     parser = argparse.ArgumentParser(description='Pattern Recogniton Task1')
 
+    # arguments allowed in function call
     parser.add_argument('-no-train', action=argparse.BooleanOptionalAction, help='Do not Perform Training')
     parser.add_argument('-no-test', action=argparse.BooleanOptionalAction, help='Do not Perform Testing')
-    parser.add_argument('-model', type=str, default='all', help='For what model to run testing and training')
     parser.add_argument('-runs', type=int, default=1, help='How many times the program is executed')
-
-    parser.add_argument('-no-cluster', action=argparse.BooleanOptionalAction, help='Do not Perform Clustering')
-    parser.add_argument('-no-search', action=argparse.BooleanOptionalAction, help='Do not Perform Grid Search')
-    parser.add_argument('-no-evaluate', action=argparse.BooleanOptionalAction, help='DO not Perform Evaluation')
 
     
     arguments = parser.parse_args()
+    # returning each function call parameter
     return arguments
 
-def run(no_train, no_test, use_model, runs):
+# Function that runs entire code
+def run(no_train, no_test, runs):
+    # reading the split data
     data_train_lab, data_train_unlab, data_test = read_data()
-    for i in range(runs):
+    # declaring results lists
+    baseline_acc, baseline_jac, baseline_f1, semi_supervised_acc, semi_supervised_jac, semi_supervised_f1, augmented_acc, augmented_jac, augmented_f1 = initialize_lists()
+    
+    # running for specified number of runs
+    for i in tqdm(range(runs)):
+        
+        # block of code for running training
         if not(no_train):
-            if use_model == "all":
-                train_baseline(data_train_lab)
-                data_train_mixed = train_semi_supervised(data_train_lab, data_train_unlab)
-                train_baseline(data_train_mixed, augmented=True)
+            train_baseline(data_train_lab)
+            data_train_mixed = train_semi_supervised(data_train_lab, data_train_unlab)
+            train_baseline(data_train_mixed, augmented=True)
 
+        # block of code for running testing
         if not(no_test):
             if use_model == "all":
-                test_model("baseline", data_test)
-                test_model("semi_supervised", data_test)
-                test_model("baseline_augmented", data_test)
+                base_acc, base_jac, base_f1 = test_model("baseline", data_test)
+                semi_acc, semi_jac, semi_f1 = test_model("semi_supervised", data_test)
+                aug_acc, aug_jac, aug_f1= test_model("baseline_augmented", data_test)
+
+        # appending acc jaccard and f1 score for each specific model to their coresponding list
+        baseline_acc.append(base_acc)
+        baseline_jac.append(base_jac)
+        baseline_f1.append(base_f1)
+        semi_supervised_acc.append(semi_acc)
+        semi_supervised_jac.append(semi_jac)
+        semi_supervised_f1.append(semi_f1)
+        augmented_acc.append(aug_acc)
+        augmented_jac.append(aug_jac)
+        augmented_f1.append(aug_f1)
+
+    # If there is more than 1 run make and save plots for all accuracies, jaccard and f1 scores
+    if runs > 1:
+        plot_results(runs, baseline_acc, baseline_jac, baseline_f1, semi_supervised_acc, semi_supervised_jac, semi_supervised_f1, augmented_acc, augmented_jac, augmented_f1)
 
 
 if __name__ == '__main__':
@@ -43,6 +65,5 @@ if __name__ == '__main__':
     run(
         arguments.no_train,
         arguments.no_test,
-        arguments.model,
         arguments.runs
         )
