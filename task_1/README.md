@@ -13,14 +13,14 @@ Classification:
 
 - Gene dataset -> Logistic Regression
 
-- Cat dataset -> Decision Tree/Support Vector Machine
+- Cat dataset -> Support Vector Machine/Naive Bayes
 
 
 Clustering:
 
 - Gene dataset -> K-means/DBSCAN
 
-- Cat dataset -> K-means 
+- Cat dataset ->  
 
 
 Evaluation metrices:
